@@ -1,0 +1,98 @@
+---
+layout: post
+title:  "组件的生命周期"
+date:   2017-07-06 16:28:20 +0800
+categories: jekyll update
+---
+
+      React 组件就是一个状态机，它接受两个输入参数： this.props 和 this.state，返回一个虚拟DOM。 React组件的生命周期分几个阶段，每个阶段会有若干个回调函数可以响应不同的时刻。
+      下面用一个例子来掩饰组件的生命周期
+
+      [javascript] view plain copy
+        1. var NotesList = React.createClass({
+        2.
+        3. getDefaultProps: function() {
+        4. console.log("getDefaultProps");
+        5. return {};
+        6. },
+        7.
+        8. getInitialState: function() {
+        9. console.log("geyInitialState");
+        10. return {};
+        11. },
+        12.
+        13. componentWillMount: function() {
+        14. console.log("componentWillMount");
+        15. },
+        16.
+        17. render: function() {
+        18. console.log("render");
+        19. return (
+        20. <div>hello <strong>{this.props.name}</strong></div>
+        21. );
+        22. },
+        23.
+        24. componentDidMount: function() {
+        25. console.log("componentDidMount");
+        26. },
+        27.
+        28. componentWillRecieveProps: function() {
+        29. console.log("componentWillRecieveProps");
+        30. },
+        31. componentWillUpdate: function() {
+        32. console.log("componentWillUpdate");
+        33. },
+        34. componentDidUpdate: function() {
+        35. console.log("componentDidUpdate");
+        36. },
+        37.
+        38. });
+        39.
+        40. var list1 = React.render(
+        41. <NotesList name='aaa'></NotesList>,
+        42. document.getElementById("div1")
+        43. );
+        44.
+        45. var list2 = React.render(
+        46. <NotesList name='bbb'></NotesList>,
+        47. document.getElementById("div2")
+        48. );
+
+
+
+      执行这一段代码，实际上做了三件事：
+
+        1. 创建了一个类 NodesList
+        2. 创建了一个对象 list1
+        3. 创建了一个对象 list2
+
+      那么在创建类的时候，输出：
+
+      getDefaultProps
+
+      在创建list1和 list2的时候都会输出：
+      geyInitialState
+      componentWillMount
+      render
+      componentDidMount
+
+      于是执行这段代码，最终输出的就是：
+
+      getDefaultProps
+      geyInitialState
+      componentWillMount
+      render
+      componentDidMount
+      geyInitialState
+      componentWillMount
+      render
+      componentDidMount
+
+      此时已经存在一个类 NodesList 和 两个对象 list1 & list2
+      然后我们执行 list1.setProps({name: "ccc”})。那么输出如下：
+
+      componentWillUpdate
+      render
+      componentDidUpdate
+
+      可以发现页面上的 hello aaa 已经变成了 hello ccc
